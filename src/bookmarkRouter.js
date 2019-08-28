@@ -1,17 +1,19 @@
-
+'use strict';
 const express = require('express');
-const bookmarkRouter = express.Router()
+const bookmarkRouter = express.Router();
 const jsonParser = express.json();
 const validUrl = require('valid-url');
 const uuid = require('uuid/v4');
 
 let bookmarks = require('./bookmarks');
 
+const regexURL = /(?:(?:http|https):\/\/)?([-a-zA-Z0-9.]{2,256}\.[a-z]{2,10})\b(?:\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/
+
 bookmarkRouter
     .route('/bookmarks')
     .get((req, res) => {
         return res
-            .json(bookmarks)
+            .json(bookmarks);
     })
     .post(jsonParser, (req, res) => {
         //destructure req data
@@ -20,34 +22,34 @@ bookmarkRouter
         if(!title) {
             return res
                 .status(400)
-                .send('The title is required.')
+                .send('The title is required.');
         }
         if(title.length < 2, title.length > 20) {
             return res
                 .status(400)
-                .send('The title must be between 2 and 20 characters.')
+                .send('The title must be between 2 and 20 characters.');
         }
         //validate url
         if(!url) {
             return res
                 .status(400)
-                .send("A url is required.")
+                .send("A url is required.");
         }
-        if(validUrl.isUri(url)) {
+        if(regexURL.test(URL)) {
             return res
                 .status(400)
-                .send('The url must be a valid url.')
+                .send('The url must be a valid url.');
         }
         //validate desc
         if(!desc) {
             return res
                 .status(400)
-                .send('The description is required.')
+                .send('The description is required.');
         }
         if(desc.length < 8 || desc.length > 60) {
             return res
                 .status(400)
-                .send('The description must be between 8 and 60 characters.')
+                .send('The description must be between 8 and 60 characters.');
         }
         //validate rating
         if(!rating) {
@@ -86,10 +88,10 @@ bookmarkRouter
     .route('/bookmarks/:id')
     .get( (req, res) => {
         const bookmarkid = req.params.id;
-        const results = bookmarks.filter(obj => obj.id === bookmarkid)
+        const results = bookmarks.filter(obj => obj.id === bookmarkid);
         if(results.length === 0) {
             return res
-                .status(404)
+                .status(404);
         }
         return res
             .json(results);
@@ -106,7 +108,7 @@ bookmarkRouter
         //remove bookmark from bookmarks
         bookmarks = bookmarks.filter(obj => obj.id !== bookmarkId);
         return res
-            .send(bookmarkId)
-    })
+            .send(bookmarkId);
+    });
 
-module.exports = bookmarkRouter
+module.exports = bookmarkRouter;
