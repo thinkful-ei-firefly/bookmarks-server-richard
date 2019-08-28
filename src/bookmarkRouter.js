@@ -2,7 +2,7 @@
 const express = require('express');
 const bookmarkRouter = express.Router();
 const jsonParser = express.json();
-const validUrl = require('valid-url');
+const { isWebUri } = require('valid-url');
 const uuid = require('uuid/v4');
 
 let bookmarks = require('./bookmarks');
@@ -35,7 +35,7 @@ bookmarkRouter
                 .status(400)
                 .send("A url is required.");
         }
-        if(regexURL.test(URL)) {
+        if(!isWebUri(url)) {
             return res
                 .status(400)
                 .send('The url must be a valid url.');
